@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Repository;
  * 컬렉션 안의 값도 바뀌어 있는 것과 같은 원리 - 그래서 별도의 update() 메서드가 필요 없다.
  */
 @Repository
+@RequiredArgsConstructor
 public class MemberJpaRepository {
 
 	// JPA의 핵심 객체. 영속성 컨텍스트(1차 캐시)를 통해 엔티티의 등록/조회/수정/삭제를 관리한다.
@@ -29,6 +31,7 @@ public class MemberJpaRepository {
 	// 저장: em.persist()는 엔티티를 영속성 컨텍스트에 등록만 하고, 실제 INSERT SQL은
 	// 트랜잭션 커밋(또는 flush) 시점에 나간다. 단, Member.id 전략이 IDENTITY라서
 	// DB가 채번한 pk 값을 즉시 알아야 하므로 이 경우는 persist() 호출 시점에 바로 INSERT가 나간다.
+	// 수정은 변경 감지 이용하기 em.merge() 호출되지 않게 하기
 	public Member save(Member member) {
 		em.persist(member);
 		return member;
